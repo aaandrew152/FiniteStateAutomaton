@@ -29,7 +29,7 @@ class Player(object):
         return self.plan.stratNumbers()
     
     def __str__ (self):
-        return "Strategy: " + str(self.getStratNumbers())
+        return "Strategy: " + str(self.getStratNumbers()) 
     #PRINT AVERAGE STRATEGY played last game?
             
     #Should consider arrows in current state as well as the moves made by others, and update strategy accordingly

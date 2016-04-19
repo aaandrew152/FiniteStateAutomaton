@@ -52,14 +52,16 @@ class Plan(object):
         if len(self.states) == 1:
             return
         else:
-            stateToDelete = random.choice(self.states)
+            stateToDelete = random.choice(range(len(self.states)))
             
             for state in self.states:
                 for arrow in state.arrowList:
                     while arrow.target == stateToDelete:
-                        arrow.target = random.choice(self.states)
+                        arrow.target = random.choice(range(len(self.states)))
+                    if arrow.target > stateToDelete:
+                        arrow.target -= 1
                         
-            self.states.remove(stateToDelete)
+            self.states[stateToDelete]
             
     def changeArrow(self):
         stateToChange = random.randint(0, len(self.states)-1)
@@ -68,7 +70,7 @@ class Plan(object):
         arrowToChange = random.randint(0, totalPossibleArrows-1)
         
         if arrowToChange < len(self.states[stateToChange].arrowList):
-            self.states[stateToChange].arrowList[arrowToChange].target = random.choice(self.states)
+            self.states[stateToChange].arrowList[arrowToChange].target = random.choice(range(len(self.states)))
         else:
             self.states[stateToChange].addRandomArrow(self)
             
@@ -77,21 +79,48 @@ class Plan(object):
         
         self.states[stateToChange].randomStrategy()
 
+    def prune(self):
+
+        accessible = [False]*len(self.states)
+
+        states_to_check = [0]
+
+        while states_to_check:
+            current = states_to_check.pop(0)
+            if accessible[current]:
+                continue
+            else:
+                accessible[current] = True
+                for arrow in self.states[current].arrowList:
+                    states_to_check.append(arrow.target)
+
+        # prune inaccessible states 
+        self.states = [x for x in self.states if accessible[self.states.index(x)]]
+
+        # update arrows 
+        for state in self.states:
+            for arrow in state.arrowList:
+                update = accessible[:arrow.target].count(False)
+                arrow.target -= update
+
     def stratNumbers(self):
-        stratNumberList = [0 for x in range(len(game.payoffMatrix))]
+        # stratNumberList = [0 for x in range(len(game.payoffMatrix))]
+        stratNumberList = []
 
-        for idx, strat in enumerate(game.payoffMatrix):
-            for state in self.states:
-                if state.strategy == idx:
-                    stratNumberList[idx] += 1
+        # for idx, strat in enumerate(game.payoffMatrix):
+        counter = 0
+        for state in self.states:
+            # if state.strategy == idx:
+            #     stratNumberList[idx] += 1
+            arrows = []
+            
+            if not state.arrowList:
+                arrows.append(None)
+            
+            for arrow in state.arrowList:
+                arrows.append((arrow.target,arrow.condition))
+
+            stratNumberList.append((counter,state.strategy,arrows))
+            counter += 1
+        
         return stratNumberList
-        
-        
-        
-            
-        
-            
-        
-            
-
-        

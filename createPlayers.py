@@ -3,6 +3,7 @@ import random
 from Parameters import game, parameters
 from Objects.Plan import Plan
 import math
+from copy import deepcopy
 
 def birthGen(individualList):
     newIndividualList = []
@@ -33,7 +34,7 @@ def makePlayer(individualList, totalPayoff):
     for player in individualList:
         runningPayoffTotal += player.payoff
         if runningPayoffTotal > randomPayoff:
-            newPlayer = Player(player.plan)
+            newPlayer = Player(deepcopy(player.plan))
             return newPlayer
                 
 def makeSets(individualList):
@@ -68,11 +69,13 @@ def mutatePlayers(individualList):
         randomMutate = random.uniform(0,1)
         if randomMutate < parameters.mutationProb:
             specificMutation = random.uniform(0,1)
-            if specificMutation < 1/4:
+            if specificMutation < parameters.mutation_addState:
                 player.plan.addRandomState()
-            elif specificMutation < 2/4:
+            elif specificMutation < parameters.mutation_addState + parameters.mutation_deleteState:
                 player.plan.deleteRandomState()
-            elif specificMutation < 3/4:
+            elif specificMutation < parameters.mutation_addState + parameters.mutation_deleteState + parameters.mutation_changeArrow:
                 player.plan.changeArrow()
             else:
                 player.plan.changeStateStrat()
+            player.plan.prune() # ensure all states are accessible from origin state
+

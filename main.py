@@ -7,6 +7,7 @@ and change the inputs.
 from Parameters import parameters
 from createPlayers import generateFirstGen, makeSets, birthGen, mutatePlayers
 from PlayGame import playGame
+from display import display
     
 def main():
     individualList = generateFirstGen(parameters.numSets, parameters.startingStrategyDistribution)#Makes the first generation
@@ -22,9 +23,10 @@ def main():
 
         individualList = birthGen(individualList)#Takes the payoffs of the old game and makes the new generation
         mutatePlayers(individualList)#Takes a new generation, and with some probability mutates players
-        
-    for player in individualList:
-        print(player)
+
+    # diplay the resultant strategies 
+    display(individualList)
+    
     #make graph?
   
 if __name__ == '__main__':
