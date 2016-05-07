@@ -26,10 +26,14 @@ for state,strat,arrows in strats:
 			edge_col.append('blue' if arrow[1][0] == 0 else 'red')
 
 pos = dict([(i,(i,0)) for i in G.nodes()])
+label = {(0,1):'1',(1,0):'12'}
+nodes = {0:'*',1:'',2:''}
 
 plt.figure('Strat 1')
-nx.draw(G, pos, node_color = colours, edge_color = edge_col)
-plt.savefig('images1/fsa.png')
+nx.draw(G, pos, labels = nodes, node_color = colours, edge_color = edge_col)
+#nx.draw_networkx_labels(G,pos,nodes)
+nx.draw_networkx_edge_labels(G,pos,edge_labels = label)
+# plt.savefig('images1/fsa.png')
 plt.show()
 
 

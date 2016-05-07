@@ -1,27 +1,45 @@
 import random
+import copy
 from Parameters import game
 
-def playGame(playerSet):
+def playGame(playerSet,collect):
     assert len(playerSet) == game.numPlayers
     
     gameOver = False
     assert game.probEnd < 1
     
+    actionsPlayed = []
+
     while not gameOver:
-        gameOver = playRound(playerSet)
+        gameOver,actions = playRound(playerSet)
+        if collect: 
+            actionsPlayed += actions
         #Continues playing the game until the game exits with probability probEnd
+    
+    # return moves played in game
+    return actionsPlayed
             
 def playRound(playerSet):
+
+    flag = True
+    actions = []
+
     for player in playerSet:
         stratList = getStrategies(player, playerSet)
+        if flag:
+            actions = copy.copy(stratList)
+            flag = False
         player.payoff += nDimListAccess(stratList, game.payoffMatrix)
-        player.plan.react(stratList)
+        player.plan.react(stratList) ##THIS MIGHT BE A PROBLEM
+
+    #print(strats)
     
     possibleEnd = random.random()
     if possibleEnd < game.probEnd:
-        return True
+        return True,actions
     else:
-        return False
+        return False,actions
+    # return tuple with moves played
        
 def nDimListAccess(accessList, matrix):
     if type(matrix) != int:

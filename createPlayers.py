@@ -77,5 +77,6 @@ def mutatePlayers(individualList):
                 player.plan.changeArrow()
             else:
                 player.plan.changeStateStrat()
-            player.plan.prune() # ensure all states are accessible from origin state
+            if parameters.mutationPrune:
+                player.plan.prune() # ensure all states are accessible from origin state every time a mutation occurs
 

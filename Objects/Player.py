@@ -14,6 +14,7 @@ class Player(object):
         if plan is None:
             self.plan = Plan(randint(0, len(game.payoffMatrix)-1))
         else:
+            plan.currentState = 0
             self.plan = plan
         self.payoff = 0
         
