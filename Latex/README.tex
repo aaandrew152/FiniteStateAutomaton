@@ -1,0 +1,115 @@
+\documentclass[11pt,twoside]{report}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{enumerate}
+
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+\setlength{\topmargin}{-1.0in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\textwidth}{6.5in}
+\newenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\setlength{\parindent}{0in}
+
+\begin{document}
+
+\begin{center}
+\section*{FiniteStateAutomaton}
+
+Code Base by Andrew Ferdowsian\\*
+White Paper + Updates by Justin Oliver\\*
+May 13, 2016
+\end{center}
+
+\subsection*{GitHub}
+
+\url{https://github.com/aaandrew152/FiniteStateAutomaton}
+
+\subsection*{Requirements}
+
+The graphical output of the library depends on \texttt{matplotlib} and \texttt{networkx}. The command line graphic also requires the \texttt{progress} library. All libraries can be installed using \texttt{\$ pip install ...}
+
+\subsection*{Usage}
+
+The desired simulation should be defined in \texttt{Parameters.py} using the guidelines outlined below. Once the simulation has been set up, simply navigate to the root directory and use \texttt{\$ python main.py} to execute the simulation. If you wish to run the same simulation multiple times with one function call, use \texttt{\$ python master.py} instead. Results will be generated according to the parameters specified and output in the desired format. 
+
+\subsection*{Parameters}
+
+\subsubsection*{Simulation Parameters}
+
+\begin{itemize}
+\item \texttt{numSets}: the number of sets of individuals in the population 
+\item \texttt{numGenerations}: the number of generations the simulation will be run for 
+\item \texttt{collectGenerations}: the number of generations before the final generations to begin recording all actions played by individuals
+\begin{itemize}
+\item must be less than or equal to the total number of generations
+\item set to zero if this function is not desired
+\end{itemize}
+\item \texttt{numSims}: the total number of simulations to be run (only relevant when using \texttt{master.py})
+\end{itemize}
+
+\subsubsection*{Game Parameters}
+
+\begin{itemize}
+\item \texttt{payoffMatrix}: the game's payoff matrix, i.e. ((2,0),(3,1)) for Prisoner's Dilemma  
+\item \texttt{discountFactor}: the probability $\delta$ that a game is repeated (i.e. does not end) within a given generation
+\item \texttt{mutationProb}: the probability that a given individual undergoes mutation at the end of a generation, with probabilities of specific mutation types specified below
+\begin{itemize}
+\item \texttt{mutation\_addState}: given an individual is mutated, probability that a new state is added (random action chosen for the state, arrow randomly chosen from all existing arrows is reassigned to point to this new state)
+\item \texttt{mutation\_deleteState}: given an individual is mutated, probability that an existing state is deleted (all arrows currently pointing to this state are randomly reassigned to point to another state)
+\item \texttt{mutation\_changeArrow}: given an individual is mutated, probability that an existing arrow is randomly reassigned to a new target
+\item \texttt{mutation\_changeAction}: given an individual is mutated, probability that the action at an existing state is randomly reassigned (this probability cannot be specified, but is rather $1 - \sum (\text{previous probabilities})$)
+\end{itemize}
+\item \texttt{startingStrategyDistribution}: the distribution of state actions at the first generation, i.e. [0.5,0.5] would state that half of all individuals begin playing each action
+\item \texttt{noise}: is there noise in the system (TO BE IMPLEMENTED)
+\item \texttt{mutationPrune}: if set to \texttt{True}, an individual's strategy will be reduced such that all states are accessible from the origin state \textit{any} time a mutation occurs, if \texttt{False} this reduction will only occur at the final generation 
+\end{itemize}
+
+\subsubsection*{Output Parameters}
+
+\begin{itemize}
+\item \texttt{prevalence}: the threshold of prevalence in the population for a strategy to be recorded, all strategies with prevalences below this threshold will essentially be thrown out at the final generation, set to 0 if all strategies should be saved
+\item \texttt{saveOutput}: if \texttt{True} simulation results will be saved to a .txt file in a directory specified below, if \texttt{False} results will be printed to standard output
+\item \texttt{withGraphics}: if \texttt{True} graphics representing each strategy will be generated and saved in the appropriate directory
+\item \texttt{directory}: specify the directory for the output to be saved into, relative to the current location of the root folder
+\begin{itemize}
+\item if left as \texttt{None}, the output will be saved in a subdirectory entitled \texttt{simulations/}
+\item if the directory already exists, \textit{it will be erased and replaced by the new results}
+\item the specified directory will contain subfolders for each simulation run 
+\end{itemize}
+\end{itemize}
+
+\subsection*{Output}
+
+\subsubsection*{Summary}
+
+When simulation results are set to be saved (see \texttt{saveOutput} parameter), a file called `summary.txt' will be generated in the specified directory. Otherwise the results will be printed to the standard output. These results contain:
+\begin{itemize}
+\item a summary of the parameters specified for the simulation
+\item the average amount all given actions were played by all individuals over the specified number of generations (see \texttt{collectGenerations} parameter)
+\item a list of all strategies present at the final generation and their prevalences
+\end{itemize}
+
+Each strategy in the list is a textual representation of the FiniteStateAutomaton object. Each item in the list represents a state as a tuple. Each state contains the following information (in order):
+\begin{enumerate}
+\item the number of the state (0 is the origin state from which all strategies begin)
+\item the action to be played at the state
+\item a list of arrows pointing away from the state, each of which is listed as a tuple of the form (target state, condition)
+\end{enumerate}
+
+\subsubsection*{Graphics}
+
+When graphics are generated (see \texttt{withGraphics} parameter), a .png image will be generated for each strategy present at the final generation. The images are saved with the title `Strategy\#\_prevalance\%.png'. The graphics can be understood as follows:
+\begin{itemize}
+\item each state is a circle with the action at that state encoded as a color
+\item each arrow is a black line where the head of the arrow is thicker
+\item each arrow is labeled with the condition of its use, represented as the action (as a number) required to take that particular path
+\item the origin state (0) is marked with *
+\end{itemize}
+
+\end{document}
