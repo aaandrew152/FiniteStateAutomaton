@@ -14,17 +14,17 @@ class Parameters(object):
         ## OVERALL SIMULATION PARAMETERS
         self.numSets = 100
         #input("How many sets(i.e. games played) per generation? This will be multiplied by the number of players in each game")
-        self.numGenerations = 10000
+        self.numGenerations = 10
         #input("How many generations?")
-        self.collectGenerations = 100
+        self.collectGenerations = 10
         #input("How many generations from the end would you like the collect strategies played for?") Make 0 if not wanted. 
-        assert(self.numGenerations > self.collectGenerations)
+        assert(self.numGenerations >= self.collectGenerations)
         self.numSims = 10
         #input("How many global simulations should be run?")
         
 
         # GAME SPECIFIC PARAMETERS
-        self.mutationProb = 0.02
+        self.mutationProb = 0
         #input("What is the chance of a mutation?")
         self.mutation_addState = 0.25
         self.mutation_deleteState = 0.25
@@ -33,13 +33,13 @@ class Parameters(object):
         assert(self.mutation_addState + self.mutation_deleteState + self.mutation_changeArrow <= 1)
 
 
-        self.startingStrategyDistribution = None
+        self.startingStrategyDistribution = [0.5,0.5]
         #Set this equal to the distribution wished, ex) = [.5, .5] would state that half play either strategy
         self.discountFactor = .98
         #With what probability does the game repeat?
         self.payoffMatrix = (
-                             (2, 0),
-                             (3, 1)
+                             (10, 9),
+                             (9, 8)
                              )
         #This is an example of the payoff matrix for the Prisoners dilemma
         #Note that payoffs are symmetric, and only the first players values are entered.
@@ -48,7 +48,7 @@ class Parameters(object):
         # set to 'True' if you want to add noise to the system
         # specify amount of noise (false pos and false negs)
 
-        self.mutationPrune = False
+        self.mutationPrune = True
         # set to 'True' if you want to prune the strategy after any mutation occurs
 
 
@@ -61,7 +61,7 @@ class Parameters(object):
         # set to 'True' if you want to save the program's output to a file
         self.withGraphics = True
         # set to 'True' if you want to generate graphical representations of strategies 
-        self.directory = 'test8/'
+        self.directory = 'test24/'
         # specify name of directory to save ouput into, 'simulations' by default
 
 parameters = Parameters()

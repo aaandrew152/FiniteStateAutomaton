@@ -24,13 +24,26 @@ def playRound(playerSet):
     flag = True
     actions = []
 
-    for player in playerSet:
+    stratLists = [None]*len(playerSet)
+            
+    # for player in playerSet:
+    #     stratList = getStrategies(player, playerSet)
+    #     if flag:
+    #         actions = copy.copy(stratList)
+    #         flag = False
+    #     player.payoff += nDimListAccess(stratList, game.payoffMatrix)
+    #     player.plan.react(stratList) ##THIS MIGHT BE A PROBLEM
+
+    for idx,player in enumerate(playerSet):
         stratList = getStrategies(player, playerSet)
+        stratLists[idx] = stratList
         if flag:
             actions = copy.copy(stratList)
             flag = False
         player.payoff += nDimListAccess(stratList, game.payoffMatrix)
-        player.plan.react(stratList) ##THIS MIGHT BE A PROBLEM
+    
+    for idx,player in enumerate(playerSet):
+        player.plan.react(stratLists[idx]) ##THIS MIGHT BE A PROBLEM
 
     #print(strats)
     

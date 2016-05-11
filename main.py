@@ -23,7 +23,7 @@ def main():
         playerSetList = makeSets(individualList)#Groups players randomly to play together
          
         for playerSet in playerSetList:
-            gameMoves = playGame(playerSet, gen > (parameters.numGenerations - parameters.collectGenerations))#Players are put through the game, and get payoffs dependant upon their strategies
+            gameMoves = playGame(playerSet, gen >= (parameters.numGenerations - parameters.collectGenerations))#Players are put through the game, and get payoffs dependant upon their strategies
             actionsPlayed += gameMoves
 
         individualList = birthGen(individualList)#Takes the payoffs of the old game and makes the new generation

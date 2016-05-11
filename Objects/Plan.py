@@ -26,6 +26,7 @@ class Plan(object):
     def getCurrentStrat(self):
         return self.states[self.currentState].strategy
     
+    # This seems restrictive given arrows from a state to itself do not exist in 'allArrows'
     def addRandomState(self):
         randomStateStrategy = random.randint(0, len(game.payoffMatrix)-1)
         self.states.append(State(randomStateStrategy))
